@@ -1,0 +1,114 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    volumes:
+      - ${MEDIA_ROOT}/audiobooks:/audiobooks
+      - ${MEDIA_ROOT}/ebooks:/ebooks
+      - ${MEDIA_ROOT}/podcasts:/podcasts
+      - audiobookshelf-config:/config
+      - audiobookshelf-metadata:/metadata
+    environment:
+      - TZ=${TZ}
+    ports:
+      - 13378:80
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - prowlarr-config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:wireguard
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - qbittorrent-config:/config
+      - ${DOWNLOAD_ROOT}/:/downloads
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - radarr-config:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${DOWNLOAD_ROOT}/:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - readarr-config:/config
+      - ${MEDIA_ROOT}/audiobooks:/audiobooks
+      - ${MEDIA_ROOT}/ebooks:/ebooks
+      - ${DOWNLOAD_ROOT}/:/downloads
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - sonarr-config:/config
+      - ${MEDIA_ROOT}/shows:/shows
+      - ${DOWNLOAD_ROOT}/:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - LOG_CONFS=true
+    volumes:
+      - wireguard-config:/config
+      - ./config/wireguard/wg_confs/:/config/wg_confs/
+    ports:
+      - 8080:8080
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    labels:
+     - "com.centurylinklabs.watchtower.monitor-only=true"
+    restart: unless-stopped
+volumes:
+  audiobookshelf-config:
+  audiobookshelf-metadata:
+  prowlarr-config:
+  qbittorrent-config:
+  radarr-config:
+  readarr-config:
+  sonarr-config:
+  wireguard-config:

@@ -1,0 +1,39 @@
+services:
+  ddclient:
+    image: lscr.io/linuxserver/ddclient:latest
+    container_name: ddclient
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ddclient-config:/config
+      - ./config/ddclient/ddclient.conf:/config/ddclient.conf
+    restart: unless-stopped
+  wireguard_server:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard_server
+    depends_on:
+      - ddclient
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - SERVERURL=${VPN_ADDRESS}
+      - SERVERPORT=${VPN_PORT}
+      - PEERS=2
+      - PEERDNS=${VPN_DNS}
+      - INTERNAL_SUBNET=10.13.13.0
+      - ALLOWEDIPS=0.0.0.0/0
+      - PERSISTENTKEEPALIVE_PEERS=all
+      - LOG_CONFS=true
+    volumes:
+      - ./config/wireguard:/config
+    ports:
+      - 51820:51820/udp
+    restart: unless-stopped
+volumes:
+  ddclient-config:

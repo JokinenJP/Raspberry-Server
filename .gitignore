@@ -1,0 +1,5 @@
+services/media/config/wireguard/wg_confs/*.conf
+services/vpn/config/ddclient/*.conf
+services/monitoring/config/prometheus/prometheus.yml
+
+.env
