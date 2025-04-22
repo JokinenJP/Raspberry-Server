@@ -13,6 +13,18 @@ services:
     ports:
       - 13378:80
     restart: unless-stopped
+  jellyseerr:
+    image: ghcr.io/fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ}
+      - PORT=5055
+    ports:
+      - 5055:5055
+    volumes:
+      - jellyseerr-config:/app/config
+    restart: unless-stopped
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -106,6 +118,7 @@ services:
 volumes:
   audiobookshelf-config:
   audiobookshelf-metadata:
+  jellyseerr-config:
   prowlarr-config:
   qbittorrent-config:
   radarr-config:
