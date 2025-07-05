@@ -13,6 +13,20 @@ services:
     ports:
       - 13378:80
     restart: unless-stopped
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - bazarr-config:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${MEDIA_ROOT}/shows:/shows
+    ports:
+      - 6767:6767
+    restart: unless-stopped
   jellyseerr:
     image: ghcr.io/fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -118,6 +132,7 @@ services:
 volumes:
   audiobookshelf-config:
   audiobookshelf-metadata:
+  bazarr-config:
   jellyseerr-config:
   prowlarr-config:
   qbittorrent-config:
