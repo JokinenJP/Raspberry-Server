@@ -93,6 +93,8 @@ services:
       - ${DOWNLOAD_ROOT}/:/downloads
     ports:
       - 8787:8787
+    labels:
+     - "com.centurylinklabs.watchtower.monitor-only=true"
     restart: unless-stopped
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
