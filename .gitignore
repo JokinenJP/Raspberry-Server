@@ -1,5 +1,6 @@
 services/media/config/wireguard/wg_confs/*.conf
 services/vpn/config/ddclient/*.conf
 services/monitoring/config/prometheus/prometheus.yml
+services/ddns/noip-duc.env
 
 .env

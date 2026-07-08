@@ -117,7 +117,7 @@ services:
       - TZ=${TZ}
     volumes:
       - sonarr_anime-config:/config
-      - ${MEDIA_ROOT}/shows:/shows
+      - ${MEDIA_ROOT}/anime:/anime
       - ${DOWNLOAD_ROOT}/:/downloads
     ports:
       - 8990:8990
