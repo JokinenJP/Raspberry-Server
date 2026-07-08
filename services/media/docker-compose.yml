@@ -108,6 +108,20 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
+  sonarr_anime:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr_anime
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - sonarr_anime-config:/config
+      - ${MEDIA_ROOT}/shows:/shows
+      - ${DOWNLOAD_ROOT}/:/downloads
+    ports:
+      - 8990:8990
+    restart: unless-stopped
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
@@ -139,4 +153,5 @@ volumes:
   radarr-config:
   readarr-config:
   sonarr-config:
+  sonarr_anime-config:
   wireguard-config:

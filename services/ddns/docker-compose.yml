@@ -1,0 +1,14 @@
+services:
+  noip-duc:
+    container_name: noip-duc
+    image: ghcr.io/noipcom/noip-duc:latest
+    env_file: noip-duc.env
+    restart: unless-stopped
+    networks:
+      - noip-duc
+
+networks:
+  noip-duc:
+    driver: bridge
+    # Uncomment the line below if you need IPv6
+    # enable_ipv6: true
