@@ -122,7 +122,7 @@ services:
       - ${MEDIA_ROOT}/anime:/anime
       - ${DOWNLOAD_ROOT}/:/downloads
     ports:
-      - 8989:8990
+      - 8990:8989
     restart: unless-stopped
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
