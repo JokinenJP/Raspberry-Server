@@ -27,6 +27,28 @@ services:
     ports:
       - 6767:6767
     restart: unless-stopped
+  cleanuparr:
+    image: ghcr.io/cleanuparr/cleanuparr:latest
+    container_name: cleanuparr
+    ports:
+      - "11011:11011"
+    volumes:
+      - cleanuparr-config:/config
+      - ${DOWNLOAD_ROOT}/:/downloads
+    environment:
+      - PORT=11011
+      - BASE_PATH=
+      - PUID=1000
+      - PGID=1000
+      - UMASK=022
+      - TZ=${TZ}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11011/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+  restart: unless-stopped
   jellyseerr:
     image: ghcr.io/fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -150,6 +172,7 @@ volumes:
   audiobookshelf-config:
   audiobookshelf-metadata:
   bazarr-config:
+  cleanuparr-config:
   jellyseerr-config:
   prowlarr-config:
   qbittorrent-config:
